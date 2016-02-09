@@ -119,9 +119,41 @@ class TestEFD(unittest.TestCase):
         pass
 
     def test_efd_shape_1(self):
-        c = pyefd.elliptical_fourier_descriptors(contour_1, order=10)
-        assert c.shape == (10, 4)
+        coeffs = pyefd.elliptic_fourier_descriptors(contour_1, order=10)
+        assert coeffs.shape == (10, 4)
 
     def test_efd_shape_2(self):
-        c = pyefd.elliptical_fourier_descriptors(contour_1, order=40)
+        c = pyefd.elliptic_fourier_descriptors(contour_1, order=40)
         assert c.shape == (40, 4)
+
+    def test_normalizing_1(self):
+        c = pyefd.elliptic_fourier_descriptors(contour_1, normalize=False)
+        assert np.abs(c[0,0]) > 0.0
+        assert np.abs(c[0,1]) > 0.0
+        assert np.abs(c[0,2]) > 0.0
+
+    def test_normalizing_2(self):
+        c = pyefd.elliptic_fourier_descriptors(contour_1, normalize=True)
+        np.testing.assert_almost_equal(c[0, 0], 1.0, decimal=14)
+        np.testing.assert_almost_equal(c[0, 1], 0.0, decimal=14)
+        np.testing.assert_almost_equal(c[0, 2], 0.0, decimal=14)
+
+    def test_locus(self):
+        locus = pyefd.calculate_dc_coefficients(contour_1)
+        np.testing.assert_array_almost_equal(locus, np.mean(contour_1, axis=0), decimal=0)
+
+    def test_fit_1(self):
+        n = 300
+        locus = pyefd.calculate_dc_coefficients(contour_1)
+        coeffs = pyefd.elliptic_fourier_descriptors(contour_1, order=20)
+
+        t = np.linspace(0, 1.0, n)
+        xt = np.ones((n,)) * locus[0]
+        yt = np.ones((n,)) * locus[1]
+
+        for n in pyefd._range(coeffs.shape[0]):
+            xt += (coeffs[n, 0] * np.cos(2 * (n + 1) * np.pi * t)) + \
+                  (coeffs[n, 1] * np.sin(2 * (n + 1) * np.pi * t))
+            yt += (coeffs[n, 2] * np.cos(2 * (n + 1) * np.pi * t)) + \
+                  (coeffs[n, 3] * np.sin(2 * (n + 1) * np.pi * t))
+

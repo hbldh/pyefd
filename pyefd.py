@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 :mod:`efd`
-==================
+==========
 
 Created by hbldh <henrik.blidh@nedomkull.com>
 Created on 2016-01-30
@@ -37,7 +37,7 @@ except NameError:
     _range = range
 
 
-def elliptical_fourier_descriptors(contour, order=10, normalize=False):
+def elliptic_fourier_descriptors(contour, order=10, normalize=False):
     """Calculate elliptical Fourier descriptors for a contour.
 
     :param contour: A contour array of size [M x 2].
@@ -53,10 +53,10 @@ def elliptical_fourier_descriptors(contour, order=10, normalize=False):
     """
     dxy = np.diff(contour, axis=0)
     dt = np.sqrt((dxy ** 2).sum(axis=1))
-    t = np.cumsum(dt)
+    t = np.concatenate([([0., ]), np.cumsum(dt)])
     T = t[-1]
 
-    phi = np.concatenate([([0., ]), (2 * np.pi * t) / T])
+    phi = (2 * np.pi * t) / T
 
     coeffs = np.zeros((order, 4))
     for n in _range(1, order + 1):
@@ -83,6 +83,9 @@ def normalize_efd(coeffs, size_invariant=True):
 
     :param coeffs: A [n x 4] Fourier coefficient array.
     :type coeffs: :py:class:`numpy.ndarray`
+    :param size_invariant: If size invariance normalizing should be done as well.
+                           Default is `True`
+    :type size_invariant: bool
     :return: The normalized [n x 4] Fourier coefficient array.
     :rtype: :py:class:`numpy.ndarray`
 
@@ -118,7 +121,31 @@ def normalize_efd(coeffs, size_invariant=True):
     return coeffs
 
 
-def plot_efd(contour, coeffs, locus=(0., 0.), n=300):
+def calculate_dc_coefficients(contour):
+    """Calculate the A0 and C0 coefficients of the elliptic Fourier series
+
+    :param contour: A contour array of size [M x 2].
+    :type contour: :py:class:`numpy.ndarray`
+    :return: The A0 and C0 coefficients.
+    :rtype: tuple
+
+    """
+    dxy = np.diff(contour, axis=0)
+    dt = np.sqrt((dxy ** 2).sum(axis=1))
+    t = np.concatenate([([0., ]), np.cumsum(dt)])
+    T = t[-1]
+
+    xi = np.cumsum(dxy[:, 0]) - (dxy[:, 0] / dt) * t[1:]
+    A0 = (1 / T) * np.sum(((dxy[:, 0] / (2 * dt)) * np.diff(t ** 2)) + xi * dt)
+    delta = np.cumsum(dxy[:, 1]) - (dxy[:, 1] / dt) * t[1:]
+    C0 = (1 / T) * np.sum(((dxy[:, 1] / (2 * dt)) * np.diff(t ** 2)) + delta * dt)
+
+    # A0 and CO relate to the first point of the contour array as origin.
+    # Adding those values to the coefficients to make them relate to true origin.
+    return contour[0, 0] + A0, contour[0, 1] + C0
+
+
+def plot_efd(coeffs, locus=(0., 0.), image=None, contour=None, n=300):
     """Plot a [2 x (n/2)] grid of successive truncations of the series.
 
     :param coeffs:  [n x 4] Fourier coefficient array.
@@ -136,20 +163,25 @@ def plot_efd(contour, coeffs, locus=(0., 0.), n=300):
         return
 
     N = coeffs.shape[0]
+    N_half = int(np.ceil(N / 2))
+    n_rows = 2
+
     t = np.linspace(0, 1.0, n)
     xt = np.ones((n,)) * locus[0]
     yt = np.ones((n,)) * locus[1]
 
-    ax = plt.subplot2grid((3, N // 2), (0, 0), colspan=N//2)
-    ax.imshow(contour, plt.cm.gray)
     for n in _range(coeffs.shape[0]):
         xt += (coeffs[n, 0] * np.cos(2 * (n + 1) * np.pi * t)) + \
               (coeffs[n, 1] * np.sin(2 * (n + 1) * np.pi * t))
         yt += (coeffs[n, 2] * np.cos(2 * (n + 1) * np.pi * t)) + \
               (coeffs[n, 3] * np.sin(2 * (n + 1) * np.pi * t))
-        ax = plt.subplot2grid((3, N // 2), (n // (N // 2) + 1, n % (N // 2)))
+        ax = plt.subplot2grid((n_rows, N_half), (n // N_half, n % N_half))
         ax.set_title(str(n + 1))
-        ax.plot(yt, -xt, 'r')
+        if contour is not None:
+            ax.plot(contour[:, 1], contour[:, 0], 'c--', linewidth=2)
+        ax.plot(yt, xt, 'r', linewidth=2)
+        if image is not None:
+            ax.imshow(image, plt.cm.gray)
 
     plt.show()
 

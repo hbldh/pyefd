@@ -18,23 +18,33 @@ from __future__ import print_function
 from __future__ import absolute_import
 
 import os
-from setuptools import setup, find_packages
+import sys
+from codecs import open
+from setuptools import setup
 
-# Get the long description from the README file
-try:
-    with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'README.rst')) as f:
-        long_description = f.read()
-except:
-    with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'README.md')) as f:
-        long_description = f.read()
+
+if sys.argv[-1] == 'publish':
+    os.system('python setup.py register')
+    os.system('python setup.py sdist upload')
+    os.system('python setup.py bdist_wheel upload --universal')
+    sys.exit()
+
+
+version = '0.1.0.dev1'
+requires = ["numpy>=1.7.0"]
+
+
+def read(f):
+    return open(f, encoding='utf-8').read()
+
 
 setup(
     name='pyefd',
-    version='0.1.0.dev1',
+    version=version,
     author='Henrik Blidh',
     author_email='henrik.blidh@nedomkull.com',
     description='Python implementation of "Elliptic Fourier Features of a Closed Contour"',
-    long_description=long_description,
+    long_description=read('README.rst') + '\n\n' + read('HISTORY.rst'),
     license='MIT',
     url='https://github.com/hbldh/pyefd',
     classifiers=[
@@ -53,9 +63,13 @@ setup(
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
     ],
-    keywords=["elliptical fourier descriptors", "shape descriptors", "image analysis"],
-    packages=find_packages(exclude=('tests', )),
-    install_requires=[],
+    keywords=["elliptic fourier descriptors", "shape descriptors", "image analysis"],
+    py_modules=['pyefd'],
+    test_suite="tests",
+    zip_safe=False,
+    include_package_data=True,
+    platforms='any',
+    install_requires=requires,
     package_data={},
     dependency_links=[],
     ext_modules=[],
