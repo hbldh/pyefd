@@ -26,7 +26,7 @@ approximating the shape of the contour::
     from pyefd import elliptic_fourier_descriptors
     coeffs = elliptic_fourier_descriptors(contour, order=10)
    
-The coefficients returned are the `a_n`, `b_n`, `c_n` and `d_n` of
+The coefficients returned are the ``a_n``, ``b_n``, ``c_n`` and ``d_n`` of
 the following Fourier series representation of the shape.
 
 The coefficients returned are by default normalized so that they are 
@@ -46,8 +46,8 @@ To use these as features, one can write a small wrapper function::
         coeffs = elliptic_fourier_descriptors(contour, order=10, normalize=True)
         return coeffs.flatten()[3:]
 
-If the coefficients are normalized, then `coeffs[0, 0] = 1.0`, 
-`coeffs[0, 1] = 0.0` and `coeffs[0, 2] = 0.0`, so they can be disregarded when using
+If the coefficients are normalized, then ``coeffs[0, 0] = 1.0``,
+``coeffs[0, 1] = 0.0`` and ``coeffs[0, 2] = 0.0``, so they can be disregarded when using
 the elliptic Fourier descriptors as features.
 
 See \[1\] for more technical details.

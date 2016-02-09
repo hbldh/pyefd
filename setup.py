@@ -30,7 +30,7 @@ if sys.argv[-1] == 'publish':
     sys.exit()
 
 
-version = '0.1.0.dev1'
+version = '0.1.0'
 requires = ["numpy>=1.7.0"]
 
 
@@ -52,7 +52,7 @@ setup(
         'Operating System :: OS Independent',
         'Intended Audience :: Science/Research',
         'Intended Audience :: Developers',
-        'License :: MIT',
+        'License :: OSI Approved :: MIT License',
         'Topic :: Software Development',
         'Topic :: Scientific/Engineering',
         'Programming Language :: Python :: 2',
