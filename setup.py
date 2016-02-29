@@ -26,11 +26,11 @@ from setuptools import setup
 if sys.argv[-1] == 'publish':
     os.system('python setup.py register')
     os.system('python setup.py sdist upload')
-    os.system('python setup.py bdist_wheel upload --universal')
+    os.system('python setup.py bdist_wheel upload')
     sys.exit()
 
 
-version = '0.1.1'
+version = '0.1.2'
 requires = ["numpy>=1.7.0"]
 
 
@@ -70,6 +70,8 @@ setup(
     include_package_data=True,
     platforms='any',
     install_requires=requires,
+    setup_requires=['pytest-runner', ],
+    tests_require=['pytest', ],
     package_data={},
     dependency_links=[],
     ext_modules=[],

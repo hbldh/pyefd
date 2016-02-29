@@ -1,0 +1,11 @@
+[run]
+branch = True
+source = pyefd
+include = */pyefd/*
+omit =
+    */setup.py
+
+[report]
+exclude_lines =
+    def plot_efd
+    except NameError
