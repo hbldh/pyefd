@@ -30,7 +30,7 @@ if sys.argv[-1] == 'publish':
     sys.exit()
 
 
-version = '0.1.2'
+version = '1.0'
 requires = ["numpy>=1.7.0"]
 
 
@@ -48,7 +48,7 @@ setup(
     license='MIT',
     url='https://github.com/hbldh/pyefd',
     classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Stable',
         'Operating System :: OS Independent',
         'Intended Audience :: Science/Research',
         'Intended Audience :: Developers',

@@ -1,3 +1,8 @@
+v1.0 (2016-04-18)
+=================
+- Deemed stable enough for version 1.0 release
+- Created documentation.
+
 v0.1.2 (2016-02-29)
 ===================
 - Testing with pytest instead of nosetests.

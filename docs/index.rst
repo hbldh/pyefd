@@ -1,11 +1,13 @@
+.. PyEFD documentation master file, created by
+   sphinx-quickstart on Mon Apr 18 09:48:09 2016.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
 PyEFD
 =====
 
 .. image:: https://travis-ci.org/hbldh/pyefd.svg?branch=master
     :target: https://travis-ci.org/hbldh/pyefd
-.. image:: https://readthedocs.org/projects/pyefd/badge/?version=latest
-    :target: http://pyefd.readthedocs.org/en/latest/?badge=latest
-    :alt: Documentation Status
 .. image:: http://img.shields.io/pypi/v/pyefd.svg
     :target: https://pypi.python.org/pypi/pyefd/
 .. image:: http://img.shields.io/pypi/dm/pyefd.svg
@@ -16,6 +18,11 @@ PyEFD
     :target: https://coveralls.io/github/hbldh/pyefd?branch=master
 
 An Python/NumPy implementation of a method for approximating a contour with a Fourier series, as described in [#first]_.
+
+.. figure:: _static/pyefd.png
+
+    EFD representations of an MNIST [#second]_ digit. Shows progressive improvement of approximation
+    by order of Fourier series.
 
 Installation
 ------------
@@ -87,11 +94,6 @@ or with `Pytest <http://pytest.org/latest/>`_:
 The tests includes a single image from the MNIST dataset of handwritten digits ([#second]_) as a contour to use
 for testing.
 
-Documentation
--------------
-
-See `ReadTheDocs <http://pyefd.readthedocs.org/>`_.
-
 References
 ----------
 
@@ -99,5 +101,19 @@ References
    Computer Graphics and Image Processing, Volume 18, Issue 3, 1982, Pages 236-258,
    ISSN 0146-664X, http://dx.doi.org/10.1016/0146-664X(82)90034-X. <http://www.sci.utah.edu/~gerig/CS7960-S2010/handouts/Kuhl-Giardina-CGIP1982.pdf>`_
 
-
 .. [#second] `LeCun et al. (1999): The MNIST Dataset Of Handwritten Digits <http://yann.lecun.com/exdb/mnist/>`_
+
+API
+---
+
+.. automodule:: pyefd
+   :members:
+
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
+
