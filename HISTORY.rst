@@ -1,4 +1,4 @@
-v1.0 (2016-04-18)
+v1.0 (2016-04-19)
 =================
 - Deemed stable enough for version 1.0 release
 - Created documentation.

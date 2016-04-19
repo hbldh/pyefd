@@ -48,7 +48,7 @@ setup(
     license='MIT',
     url='https://github.com/hbldh/pyefd',
     classifiers=[
-        'Development Status :: 5 - Stable',
+        'Development Status :: 5 - Production/Stable',
         'Operating System :: OS Independent',
         'Intended Audience :: Science/Research',
         'Intended Audience :: Developers',
@@ -63,7 +63,7 @@ setup(
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
     ],
-    keywords=["elliptic fourier descriptors", "shape descriptors", "image analysis"],
+    keywords=["elliptic fourier descriptors", "fourier descriptors", "shape descriptors", "image analysis"],
     py_modules=['pyefd'],
     test_suite="tests",
     zip_safe=False,
