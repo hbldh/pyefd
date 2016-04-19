@@ -30,7 +30,7 @@ if sys.argv[-1] == 'publish':
     sys.exit()
 
 
-version = '0.1.2'
+version = '1.0'
 requires = ["numpy>=1.7.0"]
 
 
@@ -48,7 +48,7 @@ setup(
     license='MIT',
     url='https://github.com/hbldh/pyefd',
     classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
         'Operating System :: OS Independent',
         'Intended Audience :: Science/Research',
         'Intended Audience :: Developers',
@@ -63,7 +63,7 @@ setup(
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
     ],
-    keywords=["elliptic fourier descriptors", "shape descriptors", "image analysis"],
+    keywords=["elliptic fourier descriptors", "fourier descriptors", "shape descriptors", "image analysis"],
     py_modules=['pyefd'],
     test_suite="tests",
     zip_safe=False,

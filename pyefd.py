@@ -1,26 +1,23 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-:mod:`efd`
-==========
 
-Created by hbldh <henrik.blidh@nedomkull.com>
-Created on 2016-01-30
-
-A Python implementation of the method described in [1]_ for
+A Python implementation of the method described in [#a]_ and [#b]_ for
 calculating Fourier coefficients for characterizing
 closed contours.
 
-References:
------------
+References
+----------
 
-.. [1] F. P. Kuhl and C. R. Giardina, “Elliptic Fourier Features of a
+.. [#a] F. P. Kuhl and C. R. Giardina, “Elliptic Fourier Features of a
    Closed Contour," Computer Vision, Graphics and Image Processing,
-       Vol. 18, pp. 236-258, 1982.
+   Vol. 18, pp. 236-258, 1982.
 
-.. [2] Oivind Due Trier, Anil K. Jain and Torfinn Taxt, “Feature Extraction
+.. [#b] Oivind Due Trier, Anil K. Jain and Torfinn Taxt, “Feature Extraction
    Methods for Character Recognition - A Survey”, Pattern Recognition
-   Vol. 29, No.4, pp. 641-662 (1996)
+   Vol. 29, No.4, pp. 641-662, 1996
+
+Created by hbldh <henrik.blidh@nedomkull.com> on 2016-01-30.
 
 """
 
@@ -40,14 +37,11 @@ except NameError:
 def elliptic_fourier_descriptors(contour, order=10, normalize=False):
     """Calculate elliptical Fourier descriptors for a contour.
 
-    :param contour: A contour array of size [M x 2].
-    :type contour: :py:class:`numpy.ndarray`
-    :param order: The order of Fourier coefficients to calculate.
-    :type order: int
-    :param normalize: If the coefficients should be normalized
-                      as is described in [1]_ and [2]_.
-    :type normalize: bool
-    :return: A [n x 4] array of Fourier coefficients.
+    :param numpy.ndarray contour: A contour array of size ``[M x 2]``.
+    :param int order: The order of Fourier coefficients to calculate.
+    :param bool normalize: If the coefficients should be normalized;
+        see references for details.
+    :return: A ``[order x 4]`` array of Fourier coefficients.
     :rtype: :py:class:`numpy.ndarray`
 
     """
@@ -79,14 +73,12 @@ def elliptic_fourier_descriptors(contour, order=10, normalize=False):
 def normalize_efd(coeffs, size_invariant=True):
     """Normalizes an array of Fourier coefficients.
 
-    See details in [1]_ or [2]_.
+    See [#a]_ and [#b]_ for details.
 
-    :param coeffs: A [n x 4] Fourier coefficient array.
-    :type coeffs: :py:class:`numpy.ndarray`
-    :param size_invariant: If size invariance normalizing should be done as well.
-                           Default is `True`
-    :type size_invariant: bool
-    :return: The normalized [n x 4] Fourier coefficient array.
+    :param numpy.ndarray coeffs: A ``[n x 4]`` Fourier coefficient array.
+    :param bool size_invariant: If size invariance normalizing should be done as well.
+        Default is ``True``.
+    :return: The normalized ``[n x 4]`` Fourier coefficient array.
     :rtype: :py:class:`numpy.ndarray`
 
     """
@@ -122,11 +114,10 @@ def normalize_efd(coeffs, size_invariant=True):
 
 
 def calculate_dc_coefficients(contour):
-    """Calculate the A0 and C0 coefficients of the elliptic Fourier series
+    """Calculate the :math:`A_0` and :math:`C_0` coefficients of the elliptic Fourier series.
 
-    :param contour: A contour array of size [M x 2].
-    :type contour: :py:class:`numpy.ndarray`
-    :return: The A0 and C0 coefficients.
+    :param numpy.ndarray contour: A contour array of size ``[M x 2]``.
+    :return: The :math:`A_0` and :math:`C_0` coefficients.
     :rtype: tuple
 
     """
@@ -146,14 +137,16 @@ def calculate_dc_coefficients(contour):
 
 
 def plot_efd(coeffs, locus=(0., 0.), image=None, contour=None, n=300):
-    """Plot a [2 x (n/2)] grid of successive truncations of the series.
+    """Plot a ``[2 x (N / 2)]`` grid of successive truncations of the series.
 
-    :param coeffs:  [n x 4] Fourier coefficient array.
-    :type coeffs: :py:class:`numpy.ndarray`
-    :param locus: The A_0 and C_0 elliptic locus in [1]_ and [2]_.
-    :type locus: list, tuple or :py:class:`numpy.ndarray`
-    :param n: Number of points to use for plotting of Fourier series.
-    :type n: int
+    .. note::
+
+        Requires `matplotlib <http://matplotlib.org/>`_!
+
+    :param numpy.ndarray coeffs: ``[N x 4]`` Fourier coefficient array.
+    :param list, tuple or numpy.ndarray locus:
+        The :math:`A_0` and :math:`C_0` elliptic locus in [#a]_ and [#b]_.
+    :param int n: Number of points to use for plotting of Fourier series.
 
     """
     try:
