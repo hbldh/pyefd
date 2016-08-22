@@ -8,8 +8,6 @@ PyEFD
     :alt: Documentation Status
 .. image:: http://img.shields.io/pypi/v/pyefd.svg
     :target: https://pypi.python.org/pypi/pyefd/
-.. image:: http://img.shields.io/pypi/dm/pyefd.svg
-    :target: https://pypi.python.org/pypi/pyefd/
 .. image:: http://img.shields.io/pypi/l/pyefd.svg
     :target: https://pypi.python.org/pypi/pyefd/
 .. image:: https://coveralls.io/repos/github/hbldh/pyefd/badge.svg?branch=master
