@@ -32,8 +32,17 @@ approximating the shape of the contour:
 
 .. code:: python
 
+    import cv2 
+    import numpy as ny
     from pyefd import elliptic_fourier_descriptors
-    coeffs = elliptic_fourier_descriptors(contour, order=10)
+    
+    # Find the contours of a binary image using OpenCV
+    contours, hierarchy = cv2.findContours(im,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+
+    # Iterate through all contours found
+    for cnt in contours:
+        # Find the coefficients of all contours
+        coeffs = elliptic_fourier_descriptors(np.squeeze(cnt), order=10)
 
 The coefficients returned are the ``a_n``, ``b_n``, ``c_n`` and ``d_n`` of
 the following Fourier series representation of the shape.
@@ -82,7 +91,7 @@ or with `Pytest <http://pytest.org/latest/>`_:
 
     $ py.test tests.py
 
-The tests includes a single image from the MNIST dataset of handwritten digits ([#second]_) as a contour to use
+The tests include a single image from the MNIST dataset of handwritten digits ([#second]_) as a contour to use
 for testing.
 
 Documentation
