@@ -30,7 +30,7 @@ if sys.argv[-1] == 'publish':
     sys.exit()
 
 
-version = '1.0'
+version = '1.1.0'
 requires = ["numpy>=1.7.0"]
 
 
