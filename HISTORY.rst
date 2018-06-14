@@ -1,3 +1,16 @@
+v1.2.0 (2018-06-14)
+=================
+- Updated setup.py
+- Updated numpy requirement
+- Added Pipfile
+- Ran Black on code
+- Testing on 3.6
+
+v1.1.0 (2018-06-13)
+=================
+- New example for OpenCV
+- Updated documentation
+
 v1.0 (2016-04-19)
 =================
 - Deemed stable enough for version 1.0 release
