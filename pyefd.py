@@ -183,5 +183,3 @@ def plot_efd(coeffs, locus=(0., 0.), image=None, contour=None, n=300):
             ax.imshow(image, plt.cm.gray)
 
     plt.show()
-
-
