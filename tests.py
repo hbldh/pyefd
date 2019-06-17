@@ -206,4 +206,4 @@ def test_performance():
     stop = time.time()
     for_loop_time = stop - start
     print('Time taken to create order 30 efd coefficients for 100 contours:', for_loop_time)
-    assert 3 * vectorized_time < for_loop_time
+    assert vectorized_time < for_loop_time
