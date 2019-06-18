@@ -52,17 +52,23 @@ def elliptic_fourier_descriptors(contour, order=10, normalize=False):
 
     phi = (2 * np.pi * t) / T
 
-    coeffs = np.zeros((order, 4))
-    for n in _range(1, order + 1):
-        const = T / (2 * n * n * np.pi * np.pi)
-        phi_n = phi * n
-        d_cos_phi_n = np.cos(phi_n[1:]) - np.cos(phi_n[:-1])
-        d_sin_phi_n = np.sin(phi_n[1:]) - np.sin(phi_n[:-1])
-        a_n = const * np.sum((dxy[:, 0] / dt) * d_cos_phi_n)
-        b_n = const * np.sum((dxy[:, 0] / dt) * d_sin_phi_n)
-        c_n = const * np.sum((dxy[:, 1] / dt) * d_cos_phi_n)
-        d_n = const * np.sum((dxy[:, 1] / dt) * d_sin_phi_n)
-        coeffs[n - 1, :] = a_n, b_n, c_n, d_n
+    orders = np.arange(1, order + 1)
+    consts = T / (2 * orders * orders * np.pi * np.pi)
+    phi = phi * orders.reshape((order, -1))
+    d_cos_phi = np.cos(phi[:, 1:]) - np.cos(phi[:, :-1])
+    d_sin_phi = np.sin(phi[:, 1:]) - np.sin(phi[:, :-1])
+    cos_phi = (dxy[:, 0] / dt) * d_cos_phi
+    a = consts * np.sum(cos_phi, axis=1)
+    b = consts * np.sum((dxy[:, 0] / dt) * d_sin_phi, axis=1)
+    c = consts * np.sum((dxy[:, 1] / dt) * d_cos_phi, axis=1)
+    d = consts * np.sum((dxy[:, 1] / dt) * d_sin_phi, axis=1)
+
+    coeffs = np.concatenate([
+        a.reshape((order, 1)),
+        b.reshape((order, 1)),
+        c.reshape((order, 1)),
+        d.reshape((order, 1))
+    ], axis=1)
 
     if normalize:
         coeffs = normalize_efd(coeffs)
