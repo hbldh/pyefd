@@ -6,6 +6,10 @@
 PyEFD
 =====
 
+
+
+.. image:: https://dev.azure.com/hbldh/github/_apis/build/status/hbldh.pyefd?branchName=master
+    :target: https://dev.azure.com/hbldh/github/_build/latest?definitionId=6&branchName=master
 .. image:: https://travis-ci.org/hbldh/pyefd.svg?branch=master
     :target: https://travis-ci.org/hbldh/pyefd
 .. image:: http://img.shields.io/pypi/v/pyefd.svg

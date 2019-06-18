@@ -1,6 +1,7 @@
 PyEFD
 =====
 
+[![Build Status](https://dev.azure.com/hbldh/github/_apis/build/status/hbldh.pyefd?branchName=master)](https://dev.azure.com/hbldh/github/_build/latest?definitionId=6&branchName=master)
 [![image](https://travis-ci.org/hbldh/pyefd.svg?branch=master)](https://travis-ci.org/hbldh/pyefd)
 [![Documentation Status](https://readthedocs.org/projects/pyefd/badge/?version=latest)](http://pyefd.readthedocs.org/en/latest/?badge=latest)
 [![image](http://img.shields.io/pypi/v/pyefd.svg)](https://pypi.python.org/pypi/pyefd/)
@@ -12,8 +13,8 @@ An Python/NumPy implementation of a method for approximating a contour with a Fo
 Installation
 ------------
 
-``` {.sourceCode .bash}
-$ pip install pyefd
+```bash
+pip install pyefd
 ```
 
 Usage
@@ -96,7 +97,7 @@ Testing
 Run tests with with [Pytest](http://pytest.org/latest/):
 
 ```bash
-$ py.test tests.py
+py.test tests.py
 ```
 
 The tests include a single image from the MNIST dataset of handwritten digits ([2]) as a contour to use for testing.
