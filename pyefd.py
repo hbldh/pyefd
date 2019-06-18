@@ -47,7 +47,7 @@ def elliptic_fourier_descriptors(contour, order=10, normalize=False):
     """
     dxy = np.diff(contour, axis=0)
     dt = np.sqrt((dxy ** 2).sum(axis=1))
-    t = np.concatenate([([0., ]), np.cumsum(dt)])
+    t = np.concatenate([([0.]), np.cumsum(dt)])
     T = t[-1]
 
     phi = (2 * np.pi * t) / T
@@ -92,25 +92,46 @@ def normalize_efd(coeffs, size_invariant=True):
     # the first major axis. Theta_1 is that shift angle.
     theta_1 = 0.5 * np.arctan2(
         2 * ((coeffs[0, 0] * coeffs[0, 1]) + (coeffs[0, 2] * coeffs[0, 3])),
-        ((coeffs[0, 0] ** 2) - (coeffs[0, 1] ** 2) + (coeffs[0, 2] ** 2) - (coeffs[0, 3] ** 2)))
+        (
+            (coeffs[0, 0] ** 2)
+            - (coeffs[0, 1] ** 2)
+            + (coeffs[0, 2] ** 2)
+            - (coeffs[0, 3] ** 2)
+        ),
+    )
     # Rotate all coefficients by theta_1.
     for n in _range(1, coeffs.shape[0] + 1):
         coeffs[n - 1, :] = np.dot(
-            np.array([[coeffs[n - 1, 0], coeffs[n - 1, 1]],
-                      [coeffs[n - 1, 2], coeffs[n - 1, 3]]]),
-            np.array([[np.cos(n * theta_1), -np.sin(n * theta_1)],
-                      [np.sin(n * theta_1), np.cos(n * theta_1)]])).flatten()
+            np.array(
+                [
+                    [coeffs[n - 1, 0], coeffs[n - 1, 1]],
+                    [coeffs[n - 1, 2], coeffs[n - 1, 3]],
+                ]
+            ),
+            np.array(
+                [
+                    [np.cos(n * theta_1), -np.sin(n * theta_1)],
+                    [np.sin(n * theta_1), np.cos(n * theta_1)],
+                ]
+            ),
+        ).flatten()
 
     # Make the coefficients rotation invariant by rotating so that
     # the semi-major axis is parallel to the x-axis.
     psi_1 = np.arctan2(coeffs[0, 2], coeffs[0, 0])
-    psi_rotation_matrix = np.array([[np.cos(psi_1), np.sin(psi_1)],
-                                    [-np.sin(psi_1), np.cos(psi_1)]])
+    psi_rotation_matrix = np.array(
+        [[np.cos(psi_1), np.sin(psi_1)], [-np.sin(psi_1), np.cos(psi_1)]]
+    )
     # Rotate all coefficients by -psi_1.
     for n in _range(1, coeffs.shape[0] + 1):
         coeffs[n - 1, :] = psi_rotation_matrix.dot(
-            np.array([[coeffs[n - 1, 0], coeffs[n - 1, 1]],
-                      [coeffs[n - 1, 2], coeffs[n - 1, 3]]])).flatten()
+            np.array(
+                [
+                    [coeffs[n - 1, 0], coeffs[n - 1, 1]],
+                    [coeffs[n - 1, 2], coeffs[n - 1, 3]],
+                ]
+            )
+        ).flatten()
 
     if size_invariant:
         # Obtain size-invariance by normalizing.
@@ -129,7 +150,7 @@ def calculate_dc_coefficients(contour):
     """
     dxy = np.diff(contour, axis=0)
     dt = np.sqrt((dxy ** 2).sum(axis=1))
-    t = np.concatenate([([0., ]), np.cumsum(dt)])
+    t = np.concatenate([([0.]), np.cumsum(dt)])
     T = t[-1]
 
     xi = np.cumsum(dxy[:, 0]) - (dxy[:, 0] / dt) * t[1:]
@@ -170,15 +191,17 @@ def plot_efd(coeffs, locus=(0., 0.), image=None, contour=None, n=300):
     yt = np.ones((n,)) * locus[1]
 
     for n in _range(coeffs.shape[0]):
-        xt += (coeffs[n, 0] * np.cos(2 * (n + 1) * np.pi * t)) + \
-              (coeffs[n, 1] * np.sin(2 * (n + 1) * np.pi * t))
-        yt += (coeffs[n, 2] * np.cos(2 * (n + 1) * np.pi * t)) + \
-              (coeffs[n, 3] * np.sin(2 * (n + 1) * np.pi * t))
+        xt += (coeffs[n, 0] * np.cos(2 * (n + 1) * np.pi * t)) + (
+            coeffs[n, 1] * np.sin(2 * (n + 1) * np.pi * t)
+        )
+        yt += (coeffs[n, 2] * np.cos(2 * (n + 1) * np.pi * t)) + (
+            coeffs[n, 3] * np.sin(2 * (n + 1) * np.pi * t)
+        )
         ax = plt.subplot2grid((n_rows, N_half), (n // N_half, n % N_half))
         ax.set_title(str(n + 1))
         if contour is not None:
-            ax.plot(contour[:, 1], contour[:, 0], 'c--', linewidth=2)
-        ax.plot(yt, xt, 'r', linewidth=2)
+            ax.plot(contour[:, 1], contour[:, 0], "c--", linewidth=2)
+        ax.plot(yt, xt, "r", linewidth=2)
         if image is not None:
             ax.imshow(image, plt.cm.gray)
 

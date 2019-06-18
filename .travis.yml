@@ -2,25 +2,20 @@ dist: xenial
 language: python
 sudo: false
 python:
-  - "2.7"
-  - "3.4"
-  - "3.5"
-  - "3.5-dev"
-  - "3.6"
-  - "3.7"
-  - "3.7-dev"
+  - 2.7
+  - 3.4
+  - 3.5
+  - 3.6
   - "nightly"
   - pypy
 matrix:
   allow_failures:
-    - python: 2.6
-    - python: "3.5-dev"
     - python: "nightly"
     - python: pypy
 addons:
   apt:
     packages:
-    - libatlas-base-dev
+    - libopenblas-dev
     - liblapack-dev
 branches:
   only:
