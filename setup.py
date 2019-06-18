@@ -21,8 +21,8 @@ DESCRIPTION = 'Python implementation of "Elliptic Fourier Features of a Closed C
 URL = 'https://github.com/hbldh/pyefd'
 EMAIL = 'henrik.blidh@nedomkull.com'
 AUTHOR = 'Henrik Blidh'
-REQUIRES_PYTHON = '>=2.7.0'
-VERSION = '1.2.0'
+REQUIRES_PYTHON = '>=2.7.10'
+VERSION = '1.3.0a1'
 
 REQUIRED = [
     "numpy>=1.7.0"
@@ -30,9 +30,9 @@ REQUIRED = [
 
 here = os.path.abspath(os.path.dirname(__file__))
 
-with io.open(os.path.join(here, 'README.rst'), encoding='utf-8') as f:
+with io.open(os.path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = '\n' + f.read()
-with io.open(os.path.join(here, 'HISTORY.rst'), encoding='utf-8') as f:
+with io.open(os.path.join(here, 'HISTORY.md'), encoding='utf-8') as f:
     long_description = long_description + '\n\n' + f.read()
 
 # Load the package's __version__.py module as a dictionary.
@@ -86,7 +86,7 @@ setup(
     version=about['__version__'],
     description=DESCRIPTION,
     long_description=long_description,
-    # long_description_content_type='text/markdown'
+    long_description_content_type='text/markdown',
     author=AUTHOR,
     author_email=EMAIL,
     python_requires=REQUIRES_PYTHON,
