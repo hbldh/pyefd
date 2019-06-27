@@ -163,6 +163,29 @@ def calculate_dc_coefficients(contour):
     return contour[0, 0] + A0, contour[0, 1] + C0
 
 
+def reconstruct_contour(coeffs, locus=(0, 0), num_points=300):
+    t = np.linspace(0, 1.0, num_points)
+    # Append extra dimension to enable element-wise broadcasted multiplication
+    coeffs = coeffs.reshape(*coeffs.shape, 1)
+
+    orders = coeffs.shape[0]
+    orders = np.arange(1, orders + 1).reshape(-1, 1)
+    order_phases = 2 * orders * np.pi * t.reshape(1, -1)
+
+    xt_all = coeffs[:, 0] * np.cos(order_phases) + \
+             coeffs[:, 1] * np.sin(order_phases)
+    yt_all = coeffs[:, 2] * np.cos(order_phases) + \
+             coeffs[:, 3] * np.sin(order_phases)
+
+    xt_all = xt_all.sum(axis=0)
+    yt_all = yt_all.sum(axis=0)
+    xt_all = xt_all + np.ones((num_points,)) * locus[0]
+    yt_all = yt_all + np.ones((num_points,)) * locus[1]
+
+    reconstruction = np.stack([xt_all, yt_all], axis=1)
+    return reconstruction
+
+
 def plot_efd(coeffs, locus=(0., 0.), image=None, contour=None, n=300):
     """Plot a ``[2 x (N / 2)]`` grid of successive truncations of the series.
 

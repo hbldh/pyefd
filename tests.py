@@ -140,22 +140,15 @@ def test_locus():
     np.testing.assert_array_almost_equal(locus, np.mean(contour_1, axis=0), decimal=0)
 
 
-def test_fit_1():
-    n = 300
-    locus = pyefd.calculate_dc_coefficients(contour_1)
-    coeffs = pyefd.elliptic_fourier_descriptors(contour_1, order=20)
+def test_reconstruct_simple_contour():
+    simple_polygon = np.array([[1., 1.], [0., 1.], [0., 0.], [1., 0.], [1., 1.]])
+    number_of_points = simple_polygon.shape[0]
+    locus = pyefd.calculate_dc_coefficients(simple_polygon)
+    coeffs = pyefd.elliptic_fourier_descriptors(simple_polygon, order=20)
 
-    t = np.linspace(0, 1.0, n)
-    xt = np.ones((n,)) * locus[0]
-    yt = np.ones((n,)) * locus[1]
-
-    for n in pyefd._range(coeffs.shape[0]):
-        xt += (coeffs[n, 0] * np.cos(2 * (n + 1) * np.pi * t)) + \
-              (coeffs[n, 1] * np.sin(2 * (n + 1) * np.pi * t))
-        yt += (coeffs[n, 2] * np.cos(2 * (n + 1) * np.pi * t)) + \
-              (coeffs[n, 3] * np.sin(2 * (n + 1) * np.pi * t))
-
-    assert True
+    reconstruction = pyefd.reconstruct_contour(coeffs, locus, number_of_points)
+    # with only 2 decimal accuracy it is a bit of a course test, but it will do
+    np.testing.assert_array_almost_equal(simple_polygon, reconstruction, decimal=2)
 
 
 def test_performance():
