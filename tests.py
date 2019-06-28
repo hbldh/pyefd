@@ -17,6 +17,7 @@ from __future__ import absolute_import
 import time
 
 import numpy as np
+from scipy.spatial.distance import directed_hausdorff
 
 import pyefd
 
@@ -144,11 +145,24 @@ def test_reconstruct_simple_contour():
     simple_polygon = np.array([[1., 1.], [0., 1.], [0., 0.], [1., 0.], [1., 1.]])
     number_of_points = simple_polygon.shape[0]
     locus = pyefd.calculate_dc_coefficients(simple_polygon)
-    coeffs = pyefd.elliptic_fourier_descriptors(simple_polygon, order=20)
+    coeffs = pyefd.elliptic_fourier_descriptors(simple_polygon, order=30)
 
     reconstruction = pyefd.reconstruct_contour(coeffs, locus, number_of_points)
     # with only 2 decimal accuracy it is a bit of a course test, but it will do
+    # directly comparing the two polygons will only work here, because efd coefficients will be cycle-consistent
     np.testing.assert_array_almost_equal(simple_polygon, reconstruction, decimal=2)
+    hausdorff_distance, _, _ = directed_hausdorff(reconstruction, simple_polygon)
+    assert hausdorff_distance < 0.01
+
+
+def test_larger_contour():
+    locus = pyefd.calculate_dc_coefficients(contour_1)
+    coeffs = pyefd.elliptic_fourier_descriptors(contour_1, order=50)
+    number_of_points = contour_1.shape[0]
+
+    reconstruction = pyefd.reconstruct_contour(coeffs, locus, number_of_points)
+    hausdorff_distance, _, _ = directed_hausdorff(contour_1, reconstruction)
+    assert hausdorff_distance < 0.4
 
 
 def test_performance():
