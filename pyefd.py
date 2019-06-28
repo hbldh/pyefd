@@ -166,7 +166,7 @@ def calculate_dc_coefficients(contour):
 def reconstruct_contour(coeffs, locus=(0, 0), num_points=300):
     t = np.linspace(0, 1.0, num_points)
     # Append extra dimension to enable element-wise broadcasted multiplication
-    coeffs = coeffs.reshape(*coeffs.shape, 1)
+    coeffs = coeffs.reshape(coeffs.shape[0], coeffs.shape[1], 1)
 
     orders = coeffs.shape[0]
     orders = np.arange(1, orders + 1).reshape(-1, 1)
