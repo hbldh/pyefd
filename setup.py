@@ -91,7 +91,7 @@ setup(
     author_email=EMAIL,
     python_requires=REQUIRES_PYTHON,
     setup_requires=['pytest-runner', ],
-    tests_require=['pytest', ],
+    tests_require=['pytest', 'scipy'],
     url=URL,
     keywords=["elliptic fourier descriptors", "fourier descriptors", "shape descriptors", "image analysis"],
     py_modules=['pyefd'],
