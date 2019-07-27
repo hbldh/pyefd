@@ -47,22 +47,31 @@ def elliptic_fourier_descriptors(contour, order=10, normalize=False):
     """
     dxy = np.diff(contour, axis=0)
     dt = np.sqrt((dxy ** 2).sum(axis=1))
-    t = np.concatenate([([0., ]), np.cumsum(dt)])
+    t = np.concatenate([([0.]), np.cumsum(dt)])
     T = t[-1]
 
     phi = (2 * np.pi * t) / T
 
-    coeffs = np.zeros((order, 4))
-    for n in _range(1, order + 1):
-        const = T / (2 * n * n * np.pi * np.pi)
-        phi_n = phi * n
-        d_cos_phi_n = np.cos(phi_n[1:]) - np.cos(phi_n[:-1])
-        d_sin_phi_n = np.sin(phi_n[1:]) - np.sin(phi_n[:-1])
-        a_n = const * np.sum((dxy[:, 0] / dt) * d_cos_phi_n)
-        b_n = const * np.sum((dxy[:, 0] / dt) * d_sin_phi_n)
-        c_n = const * np.sum((dxy[:, 1] / dt) * d_cos_phi_n)
-        d_n = const * np.sum((dxy[:, 1] / dt) * d_sin_phi_n)
-        coeffs[n - 1, :] = a_n, b_n, c_n, d_n
+    orders = np.arange(1, order + 1)
+    consts = T / (2 * orders * orders * np.pi * np.pi)
+    phi = phi * orders.reshape((order, -1))
+    d_cos_phi = np.cos(phi[:, 1:]) - np.cos(phi[:, :-1])
+    d_sin_phi = np.sin(phi[:, 1:]) - np.sin(phi[:, :-1])
+    cos_phi = (dxy[:, 0] / dt) * d_cos_phi
+    a = consts * np.sum(cos_phi, axis=1)
+    b = consts * np.sum((dxy[:, 0] / dt) * d_sin_phi, axis=1)
+    c = consts * np.sum((dxy[:, 1] / dt) * d_cos_phi, axis=1)
+    d = consts * np.sum((dxy[:, 1] / dt) * d_sin_phi, axis=1)
+
+    coeffs = np.concatenate(
+        [
+            a.reshape((order, 1)),
+            b.reshape((order, 1)),
+            c.reshape((order, 1)),
+            d.reshape((order, 1)),
+        ],
+        axis=1,
+    )
 
     if normalize:
         coeffs = normalize_efd(coeffs)
@@ -86,25 +95,46 @@ def normalize_efd(coeffs, size_invariant=True):
     # the first major axis. Theta_1 is that shift angle.
     theta_1 = 0.5 * np.arctan2(
         2 * ((coeffs[0, 0] * coeffs[0, 1]) + (coeffs[0, 2] * coeffs[0, 3])),
-        ((coeffs[0, 0] ** 2) - (coeffs[0, 1] ** 2) + (coeffs[0, 2] ** 2) - (coeffs[0, 3] ** 2)))
+        (
+            (coeffs[0, 0] ** 2)
+            - (coeffs[0, 1] ** 2)
+            + (coeffs[0, 2] ** 2)
+            - (coeffs[0, 3] ** 2)
+        ),
+    )
     # Rotate all coefficients by theta_1.
     for n in _range(1, coeffs.shape[0] + 1):
         coeffs[n - 1, :] = np.dot(
-            np.array([[coeffs[n - 1, 0], coeffs[n - 1, 1]],
-                      [coeffs[n - 1, 2], coeffs[n - 1, 3]]]),
-            np.array([[np.cos(n * theta_1), -np.sin(n * theta_1)],
-                      [np.sin(n * theta_1), np.cos(n * theta_1)]])).flatten()
+            np.array(
+                [
+                    [coeffs[n - 1, 0], coeffs[n - 1, 1]],
+                    [coeffs[n - 1, 2], coeffs[n - 1, 3]],
+                ]
+            ),
+            np.array(
+                [
+                    [np.cos(n * theta_1), -np.sin(n * theta_1)],
+                    [np.sin(n * theta_1), np.cos(n * theta_1)],
+                ]
+            ),
+        ).flatten()
 
     # Make the coefficients rotation invariant by rotating so that
     # the semi-major axis is parallel to the x-axis.
     psi_1 = np.arctan2(coeffs[0, 2], coeffs[0, 0])
-    psi_rotation_matrix = np.array([[np.cos(psi_1), np.sin(psi_1)],
-                                    [-np.sin(psi_1), np.cos(psi_1)]])
+    psi_rotation_matrix = np.array(
+        [[np.cos(psi_1), np.sin(psi_1)], [-np.sin(psi_1), np.cos(psi_1)]]
+    )
     # Rotate all coefficients by -psi_1.
     for n in _range(1, coeffs.shape[0] + 1):
         coeffs[n - 1, :] = psi_rotation_matrix.dot(
-            np.array([[coeffs[n - 1, 0], coeffs[n - 1, 1]],
-                      [coeffs[n - 1, 2], coeffs[n - 1, 3]]])).flatten()
+            np.array(
+                [
+                    [coeffs[n - 1, 0], coeffs[n - 1, 1]],
+                    [coeffs[n - 1, 2], coeffs[n - 1, 3]],
+                ]
+            )
+        ).flatten()
 
     if size_invariant:
         # Obtain size-invariance by normalizing.
@@ -123,7 +153,7 @@ def calculate_dc_coefficients(contour):
     """
     dxy = np.diff(contour, axis=0)
     dt = np.sqrt((dxy ** 2).sum(axis=1))
-    t = np.concatenate([([0., ]), np.cumsum(dt)])
+    t = np.concatenate([([0.]), np.cumsum(dt)])
     T = t[-1]
 
     xi = np.cumsum(dxy[:, 0]) - (dxy[:, 0] / dt) * t[1:]
@@ -134,6 +164,39 @@ def calculate_dc_coefficients(contour):
     # A0 and CO relate to the first point of the contour array as origin.
     # Adding those values to the coefficients to make them relate to true origin.
     return contour[0, 0] + A0, contour[0, 1] + C0
+
+
+def reconstruct_contour(coeffs, locus=(0, 0), num_points=300):
+    """Returns the contour specified by the coefficients.
+
+    :param coeffs: A ``[n x 4]`` Fourier coefficient array.
+    :type coeffs: numpy.ndarray
+    :param locus: The :math:`A_0` and :math:`C_0` elliptic locus in [#a]_ and [#b]_.
+    :type locus: list, tuple or numpy.ndarray
+    :param num_points: The number of sample points used for reconstructing the contour from the EFD.
+    :type num_points: int
+    :return: A list of x,y coordinates for the reconstructed contour.
+    :rtype: numpy.ndarray
+
+    """
+    t = np.linspace(0, 1.0, num_points)
+    # Append extra dimension to enable element-wise broadcasted multiplication
+    coeffs = coeffs.reshape(coeffs.shape[0], coeffs.shape[1], 1)
+
+    orders = coeffs.shape[0]
+    orders = np.arange(1, orders + 1).reshape(-1, 1)
+    order_phases = 2 * orders * np.pi * t.reshape(1, -1)
+
+    xt_all = coeffs[:, 0] * np.cos(order_phases) + coeffs[:, 1] * np.sin(order_phases)
+    yt_all = coeffs[:, 2] * np.cos(order_phases) + coeffs[:, 3] * np.sin(order_phases)
+
+    xt_all = xt_all.sum(axis=0)
+    yt_all = yt_all.sum(axis=0)
+    xt_all = xt_all + np.ones((num_points,)) * locus[0]
+    yt_all = yt_all + np.ones((num_points,)) * locus[1]
+
+    reconstruction = np.stack([xt_all, yt_all], axis=1)
+    return reconstruction
 
 
 def plot_efd(coeffs, locus=(0., 0.), image=None, contour=None, n=300):
@@ -164,18 +227,18 @@ def plot_efd(coeffs, locus=(0., 0.), image=None, contour=None, n=300):
     yt = np.ones((n,)) * locus[1]
 
     for n in _range(coeffs.shape[0]):
-        xt += (coeffs[n, 0] * np.cos(2 * (n + 1) * np.pi * t)) + \
-              (coeffs[n, 1] * np.sin(2 * (n + 1) * np.pi * t))
-        yt += (coeffs[n, 2] * np.cos(2 * (n + 1) * np.pi * t)) + \
-              (coeffs[n, 3] * np.sin(2 * (n + 1) * np.pi * t))
+        xt += (coeffs[n, 0] * np.cos(2 * (n + 1) * np.pi * t)) + (
+            coeffs[n, 1] * np.sin(2 * (n + 1) * np.pi * t)
+        )
+        yt += (coeffs[n, 2] * np.cos(2 * (n + 1) * np.pi * t)) + (
+            coeffs[n, 3] * np.sin(2 * (n + 1) * np.pi * t)
+        )
         ax = plt.subplot2grid((n_rows, N_half), (n // N_half, n % N_half))
         ax.set_title(str(n + 1))
         if contour is not None:
-            ax.plot(contour[:, 1], contour[:, 0], 'c--', linewidth=2)
-        ax.plot(yt, xt, 'r', linewidth=2)
+            ax.plot(contour[:, 1], contour[:, 0], "c--", linewidth=2)
+        ax.plot(yt, xt, "r", linewidth=2)
         if image is not None:
             ax.imshow(image, plt.cm.gray)
 
     plt.show()
-
-
