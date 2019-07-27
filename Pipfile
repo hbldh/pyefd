@@ -13,6 +13,4 @@ numpy = "*"
 [dev-packages]
 
 pytest = "*"
-black = "*"
-twine = "*"
-
+scipy = "*"

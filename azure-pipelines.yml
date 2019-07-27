@@ -37,7 +37,7 @@ jobs:
     displayName: 'Install Python dependencies'
 
   - script: |
-      pip install pytest pytest-cov mock
+      pip install pytest pytest-cov mock scipy
       pytest tests.py --doctest-modules --junitxml=junit/test-results.xml --cov pyefd --cov-report term-missing
     displayName: 'pytest'
 

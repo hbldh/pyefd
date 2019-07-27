@@ -1,3 +1,6 @@
+## v1.40 (2019-07-27)
+- Merged PR #4: Vectorized contour reconstruction function
+
 ## v1.3.0 (2019-06-18)
 - Merged PR #2: Numpy vectorized efd
 - Moved from Travis CI to Azure Pipelines
