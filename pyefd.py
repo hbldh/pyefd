@@ -171,7 +171,7 @@ def reconstruct_contour(coeffs, locus=(0, 0), num_points=300):
 
     :param coeffs: A ``[n x 4]`` Fourier coefficient array.
     :type coeffs: numpy.ndarray
-    :param locus:The :math:`A_0` and :math:`C_0` elliptic locus in [#a]_ and [#b]_.
+    :param locus: The :math:`A_0` and :math:`C_0` elliptic locus in [#a]_ and [#b]_.
     :type locus: list, tuple or numpy.ndarray
     :param num_points: The number of sample points used for reconstructing the contour from the EFD.
     :type num_points: int
