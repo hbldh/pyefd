@@ -1,8 +1,7 @@
 PyEFD
 =====
 
-[![Build Status](https://dev.azure.com/hbldh/github/_apis/build/status/hbldh.pyefd?branchName=master)](https://dev.azure.com/hbldh/github/_build/latest?definitionId=6&branchName=master)
-[![image](https://travis-ci.org/hbldh/pyefd.svg?branch=master)](https://travis-ci.org/hbldh/pyefd)
+[![Build and Test](https://github.com/hbldh/pyefd/workflows/Build%20and%20Test/badge.svg)](https://github.com/hbldh/pyefd/actions?query=workflow%3A%22Build+and+Test%22)
 [![Documentation Status](https://readthedocs.org/projects/pyefd/badge/?version=latest)](http://pyefd.readthedocs.org/en/latest/?badge=latest)
 [![image](http://img.shields.io/pypi/v/pyefd.svg)](https://pypi.python.org/pypi/pyefd/)
 [![image](http://img.shields.io/pypi/l/pyefd.svg)](https://pypi.python.org/pypi/pyefd/)
