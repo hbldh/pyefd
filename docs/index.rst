@@ -6,12 +6,10 @@
 PyEFD
 =====
 
+[![Build and Test]()](https://github.com/hbldh/pyefd/actions?query=workflow%3A%22Build+and+Test%22)
 
-
-.. image:: https://dev.azure.com/hbldh/github/_apis/build/status/hbldh.pyefd?branchName=master
-    :target: https://dev.azure.com/hbldh/github/_build/latest?definitionId=6&branchName=master
-.. image:: https://travis-ci.org/hbldh/pyefd.svg?branch=master
-    :target: https://travis-ci.org/hbldh/pyefd
+.. image:: https://github.com/hbldh/pyefd/workflows/Build%20and%20Test/badge.svg
+    :target: https://github.com/hbldh/pyefd/actions?query=workflow%3A%22Build+and+Test%22
 .. image:: http://img.shields.io/pypi/v/pyefd.svg
     :target: https://pypi.python.org/pypi/pyefd/
 .. image:: http://img.shields.io/pypi/dm/pyefd.svg
@@ -140,6 +138,123 @@ References
    ISSN 0146-664X, http://dx.doi.org/10.1016/0146-664X(82)90034-X. <http://www.sci.utah.edu/~gerig/CS7960-S2010/handouts/Kuhl-Giardina-CGIP1982.pdf>`_
 
 .. [#second] `LeCun et al. (1999): The MNIST Dataset Of Handwritten Digits <http://yann.lecun.com/exdb/mnist/>`_
+
+
+Changelog
+=========
+
+All notable changes to this project will be documented in this file.
+
+The format is based on `Keep a
+Changelog <https://keepachangelog.com/en/1.0.0/>`__, and this project
+adheres to `Semantic
+Versioning <https://semver.org/spec/v2.0.0.html>`__.
+
+`1.4.1 <https://github.com/hbldh/pyefd/compare/v1.4.1...v1.4.0>`__ (2020-09-28)
+-------------------------------------------------------------------------------
+
+Added
+~~~~~
+
+-  Added ``CHANGELOG.md``
+
+Changed
+~~~~~~~
+
+-  Change CI from Azure Devops to Github Actions
+
+`1.4.0 <https://github.com/hbldh/pyefd/compare/v1.4.0...v1.3.0>`__ (2019-07-27)
+-------------------------------------------------------------------------------
+
+Changed
+~~~~~~~
+
+-  Merged PR #4: Vectorized contour reconstruction function
+
+`1.3.0 <https://github.com/hbldh/pyefd/compare/v1.3.0...v1.2.0>`__ (2019-06-18)
+-------------------------------------------------------------------------------
+
+Changed
+~~~~~~~
+
+-  Merged PR #2: Numpy vectorized efd
+-  Moved from Travis CI to Azure Pipelines
+-  Replaced rst with markdown
+
+`1.2.0 <https://github.com/hbldh/pyefd/compare/v1.2.0...v1.1.0>`__ (2018-06-14)
+-------------------------------------------------------------------------------
+
+Changed
+~~~~~~~
+
+-  Updated setup.py
+-  Updated numpy requirement
+
+Added
+~~~~~
+
+-  Added Pipfile
+-  Ran Black on code
+-  Testing on 3.6
+
+`1.1.0 <https://github.com/hbldh/pyefd/compare/v1.1.0...v1.0.0>`__ (2018-06-13)
+-------------------------------------------------------------------------------
+
+Added
+~~~~~
+
+-  New example for OpenCV
+-  Updated documentation
+
+`1.0.0 <https://github.com/hbldh/pyefd/compare/v1.0.0...v0,1.2>`__ (2016-04-19)
+-------------------------------------------------------------------------------
+
+Changed
+~~~~~~~
+
+-  Deemed stable enough for version 1.0 release
+
+Added
+~~~~~
+
+-  Created documentation.
+
+`0.1.2 <https://github.com/hbldh/pyefd/compare/v0.1.2...v0,1.1>`__ (2016-02-29)
+-------------------------------------------------------------------------------
+
+Changed
+~~~~~~~
+
+-  Testing with pytest instead of nosetests.
+
+Added
+~~~~~
+
+-  Added Coveralls use.
+
+`0.1.1 <https://github.com/hbldh/pyefd/compare/v0.1.1...v0,1.0>`__ (2016-02-17)
+-------------------------------------------------------------------------------
+
+Fixed
+~~~~~
+
+-  Fixed MANIFEST
+
+Added
+~~~~~
+
+-  Added LICENSE file that was missing.
+
+0.1.0 (2016-02-09)
+------------------
+
+Added
+~~~~~
+
+-  Initial release
+
+
+
 
 API
 ---

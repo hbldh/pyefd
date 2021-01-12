@@ -54,7 +54,7 @@ master_doc = "index"
 
 # General information about the project.
 project = u"PyEFD"
-copyright = u"2016, Henrik Blidh"
+copyright = u"2020, Henrik Blidh"
 author = u"Henrik Blidh"
 
 # The version info for the project you're documenting, acts as replacement for
