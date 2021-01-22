@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Documentation correction. Merged #12.
 
+### Removed
+
+- Deleted broken example script `scikit_image.py`.
+
 ## [1.4.1] (2020-09-28)
 
 ### Added
