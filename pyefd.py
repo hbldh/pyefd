@@ -34,20 +34,25 @@ except NameError:
     _range = range
 
 
-def elliptic_fourier_descriptors(contour, order=10, normalize=False):
+def elliptic_fourier_descriptors(
+    contour, order=10, normalize=False, return_transformation=False
+):
     """Calculate elliptical Fourier descriptors for a contour.
 
     :param numpy.ndarray contour: A contour array of size ``[M x 2]``.
     :param int order: The order of Fourier coefficients to calculate.
     :param bool normalize: If the coefficients should be normalized;
         see references for details.
-    :return: A ``[order x 4]`` array of Fourier coefficients.
-    :rtype: :py:class:`numpy.ndarray`
+    :param bool return_transformation: If the normalization parametres should be returned.
+        Default is ``False``.
+    :return: A ``[order x 4]`` array of Fourier coefficients and optionally the
+        transformation parametres ``scale``, ``psi_1`` (rotation) and ``theta_1`` (phase)
+    :rtype: ::py:class:`numpy.ndarray` or (:py:class:`numpy.ndarray`, (float, float, float))
 
     """
     dxy = np.diff(contour, axis=0)
     dt = np.sqrt((dxy ** 2).sum(axis=1))
-    t = np.concatenate([([0.]), np.cumsum(dt)])
+    t = np.concatenate([([0.0]), np.cumsum(dt)])
     T = t[-1]
 
     phi = (2 * np.pi * t) / T
@@ -74,12 +79,12 @@ def elliptic_fourier_descriptors(contour, order=10, normalize=False):
     )
 
     if normalize:
-        coeffs = normalize_efd(coeffs)
+        coeffs = normalize_efd(coeffs, return_transformation=return_transformation)
 
     return coeffs
 
 
-def normalize_efd(coeffs, size_invariant=True):
+def normalize_efd(coeffs, size_invariant=True, return_transformation=False):
     """Normalizes an array of Fourier coefficients.
 
     See [#a]_ and [#b]_ for details.
@@ -87,8 +92,11 @@ def normalize_efd(coeffs, size_invariant=True):
     :param numpy.ndarray coeffs: A ``[n x 4]`` Fourier coefficient array.
     :param bool size_invariant: If size invariance normalizing should be done as well.
         Default is ``True``.
-    :return: The normalized ``[n x 4]`` Fourier coefficient array.
-    :rtype: :py:class:`numpy.ndarray`
+    :param bool return_transformation: If the normalization parametres should be returned.
+        Default is ``False``.
+    :return: The normalized ``[n x 4]`` Fourier coefficient array and optionally the
+        transformation parametres ``scale``, :math:`psi_1` (rotation) and :math:`theta_1` (phase)
+    :rtype: :py:class:`numpy.ndarray` or (:py:class:`numpy.ndarray`, (float, float, float))
 
     """
     # Make the coefficients have a zero phase shift from
@@ -136,11 +144,15 @@ def normalize_efd(coeffs, size_invariant=True):
             )
         ).flatten()
 
+    size = coeffs[0, 0]
     if size_invariant:
         # Obtain size-invariance by normalizing.
-        coeffs /= np.abs(coeffs[0, 0])
+        coeffs /= np.abs(size)
 
-    return coeffs
+    if return_transformation:
+        return coeffs, (size, psi_1, theta_1)
+    else:
+        return coeffs
 
 
 def calculate_dc_coefficients(contour):
@@ -153,7 +165,7 @@ def calculate_dc_coefficients(contour):
     """
     dxy = np.diff(contour, axis=0)
     dt = np.sqrt((dxy ** 2).sum(axis=1))
-    t = np.concatenate([([0.]), np.cumsum(dt)])
+    t = np.concatenate([([0.0]), np.cumsum(dt)])
     T = t[-1]
 
     xi = np.cumsum(dxy[:, 0]) - (dxy[:, 0] / dt) * t[1:]
@@ -199,7 +211,7 @@ def reconstruct_contour(coeffs, locus=(0, 0), num_points=300):
     return reconstruction
 
 
-def plot_efd(coeffs, locus=(0., 0.), image=None, contour=None, n=300):
+def plot_efd(coeffs, locus=(0.0, 0.0), image=None, contour=None, n=300):
     """Plot a ``[2 x (N / 2)]`` grid of successive truncations of the series.
 
     .. note::

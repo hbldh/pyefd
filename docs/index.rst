@@ -54,13 +54,13 @@ This section describes the general usage patterns of :py:mod:`pyefd`.
 The coefficients returned are the :math:`a_n`, :math:`b_n`, :math:`c_n` and :math:`d_n` of
 the following Fourier series representation of the shape.
 
-The coefficients returned are by default normalized so that they are
-rotation and size-invariant. This can be overridden by calling:
+The coefficients returned can be normalized so that they are
+rotation and size-invariant. This can be achieved by calling:
 
 .. code:: python
 
     from pyefd import elliptic_fourier_descriptors
-    coeffs = elliptic_fourier_descriptors(contour, order=10, normalize=False)
+    coeffs = elliptic_fourier_descriptors(contour, order=10, normalize=True)
 
 Normalization can also be done afterwards:
 

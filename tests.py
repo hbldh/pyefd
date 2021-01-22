@@ -18,6 +18,7 @@ import time
 
 import numpy as np
 from scipy.spatial.distance import directed_hausdorff
+from math import pi
 
 import pyefd
 
@@ -1008,13 +1009,38 @@ def test_normalizing_2():
     np.testing.assert_almost_equal(c[0, 2], 0.0, decimal=14)
 
 
+def test_normalizing_3():
+    # rotate and scale contour_1 by a known amount
+    theta = np.radians(30)
+    c, s = np.cos(theta), np.sin(theta)
+    R = np.array(((c, -s), (s, c))) * 1.5
+    contour_2 = np.transpose(np.dot(R, np.transpose(contour_1)))
+
+    c1, t1 = pyefd.elliptic_fourier_descriptors(
+        contour_1, normalize=True, return_transformation=True
+    )
+    c2, t2 = pyefd.elliptic_fourier_descriptors(
+        contour_2, normalize=True, return_transformation=True
+    )
+
+    # check if coefficients are equal (invariance)
+    np.testing.assert_almost_equal(c1, c2, decimal=12)
+    # check if normalization parametres match the initial transform
+    np.testing.assert_almost_equal(t1[0] * 1.5, t2[0], decimal=12)
+    np.testing.assert_almost_equal(
+        (t1[1] + np.radians(30)) % (2 * pi), t2[1], decimal=12
+    )
+
+
 def test_locus():
     locus = pyefd.calculate_dc_coefficients(contour_1)
     np.testing.assert_array_almost_equal(locus, np.mean(contour_1, axis=0), decimal=0)
 
 
 def test_reconstruct_simple_contour():
-    simple_polygon = np.array([[1., 1.], [0., 1.], [0., 0.], [1., 0.], [1., 1.]])
+    simple_polygon = np.array(
+        [[1.0, 1.0], [0.0, 1.0], [0.0, 0.0], [1.0, 0.0], [1.0, 1.0]]
+    )
     number_of_points = simple_polygon.shape[0]
     locus = pyefd.calculate_dc_coefficients(simple_polygon)
     coeffs = pyefd.elliptic_fourier_descriptors(simple_polygon, order=30)
@@ -1049,7 +1075,7 @@ def test_performance():
         """
         dxy = np.diff(contour, axis=0)
         dt = np.sqrt((dxy ** 2).sum(axis=1))
-        t = np.concatenate([([0.]), np.cumsum(dt)])
+        t = np.concatenate([([0.0]), np.cumsum(dt)])
         T = t[-1]
 
         phi = (2 * np.pi * t) / T
