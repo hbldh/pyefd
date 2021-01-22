@@ -22,7 +22,7 @@ URL = "https://github.com/hbldh/pyefd"
 EMAIL = "henrik.blidh@nedomkull.com"
 AUTHOR = "Henrik Blidh"
 REQUIRES_PYTHON = ">=2.7.10"
-VERSION = "1.5.0"
+VERSION = "1.5.1"
 
 REQUIRED = ["numpy>=1.7.0"]
 
