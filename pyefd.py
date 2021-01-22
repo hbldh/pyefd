@@ -34,7 +34,9 @@ except NameError:
     _range = range
 
 
-def elliptic_fourier_descriptors(contour, order=10, normalize=False, return_transformation=False):
+def elliptic_fourier_descriptors(
+    contour, order=10, normalize=False, return_transformation=False
+):
     """Calculate elliptical Fourier descriptors for a contour.
 
     :param numpy.ndarray contour: A contour array of size ``[M x 2]``.
@@ -50,7 +52,7 @@ def elliptic_fourier_descriptors(contour, order=10, normalize=False, return_tran
     """
     dxy = np.diff(contour, axis=0)
     dt = np.sqrt((dxy ** 2).sum(axis=1))
-    t = np.concatenate([([0.]), np.cumsum(dt)])
+    t = np.concatenate([([0.0]), np.cumsum(dt)])
     T = t[-1]
 
     phi = (2 * np.pi * t) / T
@@ -163,7 +165,7 @@ def calculate_dc_coefficients(contour):
     """
     dxy = np.diff(contour, axis=0)
     dt = np.sqrt((dxy ** 2).sum(axis=1))
-    t = np.concatenate([([0.]), np.cumsum(dt)])
+    t = np.concatenate([([0.0]), np.cumsum(dt)])
     T = t[-1]
 
     xi = np.cumsum(dxy[:, 0]) - (dxy[:, 0] / dt) * t[1:]
@@ -209,7 +211,7 @@ def reconstruct_contour(coeffs, locus=(0, 0), num_points=300):
     return reconstruction
 
 
-def plot_efd(coeffs, locus=(0., 0.), image=None, contour=None, n=300):
+def plot_efd(coeffs, locus=(0.0, 0.0), image=None, contour=None, n=300):
     """Plot a ``[2 x (N / 2)]`` grid of successive truncations of the series.
 
     .. note::
