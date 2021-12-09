@@ -240,55 +240,32 @@ def plot_efd(coeffs, locus=(0.0, 0.0), image=None, contour=None, n=300):
     yt = np.ones((n,)) * locus[1]
 
     for n in _range(coeffs.shape[0]):
-        xt += coeffs[n, 0] * np.cos(2 * (n + 1) * np.pi * t) + coeffs[n, 1] * np.sin(2 * (n + 1) * np.pi * t)
-        yt += coeffs[n, 2] * np.cos(2 * (n + 1) * np.pi * t) + coeffs[n, 3] * np.sin(2 * (n + 1) * np.pi * t)
+        xt += (coeffs[n, 0] * np.cos(2 * (n + 1) * np.pi * t)) + (
+            coeffs[n, 1] * np.sin(2 * (n + 1) * np.pi * t)
+        )
+        yt += (coeffs[n, 2] * np.cos(2 * (n + 1) * np.pi * t)) + (
+            coeffs[n, 3] * np.sin(2 * (n + 1) * np.pi * t)
+        )
 
         ax = plt.subplot2grid((n_rows, N_half), (n // N_half, n % N_half))
         ax.set_title(str(n + 1))
-        if contour is not None:
-            ax.plot(contour[:, 0], contour[:, 1], "c--", linewidth=2)
-        ax.plot(xt, yt, "r", linewidth=2)
+
         if image is not None:
+            # A background image of shape [rows, cols] gets transposed
+            # by imshow so that the first dimension is vertical
+            # and the second dimension is horizontal.
+            # This implies swapping the x and y axes when plotting a curve.
+            if contour is not None:
+                ax.plot(contour[:, 1], contour[:, 0], "c--", linewidth=2)
+            ax.plot(yt, xt, "r", linewidth=2)
             ax.imshow(image, plt.cm.gray)
-        ax.axis("equal")
+        else:
+            # Without a background image, no transpose is implied.
+            # This case is useful when (x,y) point clouds
+            # without relation to an image is to be handled.
+            if contour is not None:
+                ax.plot(contour[:, 0], contour[:, 1], "c--", linewidth=2)
+            ax.plot(xt, yt, "r", linewidth=2)
+            ax.axis("equal")
 
     plt.show()
-
-
-if __name__ == "__main__":
-    # THe demo curves are taken from
-    # "Optimized Fourier representations for three-dimensional magnetic surfaces"
-    # by S. P. Hirshman and H. K. Meier,
-    # Phys. Fluids 28 (5) 1985 (https://doi.org/10.1063/1.864972)
-
-    # bean
-    rCos = np.array([3.0, 1.042, 0.502, -0.0389])
-    zSin = np.array([0.0, 1.339, 0.296, -0.0176])
-
-    # diamond
-    rCos = np.array([0.5, 0.427, 0.0,  0.0732])
-    zSin = np.array([0.0, 0.427, 0.0, -0.0732])
-
-    # D
-    rCos = np.array([3.0, 0.991,  0.136])
-    zSin = np.array([0.0, 1.409, -0.118])
-
-    # belt
-    rCos = np.array([3.0, 0.453, 0.0, 0.0  ])
-    zSin = np.array([0.0, 0.6  , 0.0, 0.196])
-
-    # ellipse
-    rCos = np.array([3.0, 1.0])
-    zSin = np.array([0.0, 3.0])
-
-    n = 30
-    contour = np.zeros([n,2])
-    theta = np.linspace(0.0, 2.0*np.pi, n)
-    mMax = len(rCos)
-    for m in range(mMax):
-        contour[:,0] += rCos[m] * np.cos(m*theta)
-        contour[:,1] += zSin[m] * np.sin(m*theta)
-
-    coeffs = elliptic_fourier_descriptors(contour)
-    a0,c0 = calculate_dc_coefficients(contour)
-    plot_efd(coeffs, locus=(a0,c0), contour=contour)
