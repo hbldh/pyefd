@@ -261,7 +261,7 @@ def plot_efd(coeffs, locus=(0.0, 0.0), image=None, contour=None, n=300):
         else:
             # Without a background image, no transpose is implied.
             # This case is useful when (x,y) point clouds
-            # without relation to an image is to be handled.
+            # without relation to an image are to be handled.
             if contour is not None:
                 ax.plot(contour[:, 0], contour[:, 1], "c--", linewidth=2)
             ax.plot(xt, yt, "r", linewidth=2)
