@@ -246,7 +246,6 @@ def plot_efd(coeffs, locus=(0.0, 0.0), image=None, contour=None, n=300):
         yt += (coeffs[n, 2] * np.cos(2 * (n + 1) * np.pi * t)) + (
             coeffs[n, 3] * np.sin(2 * (n + 1) * np.pi * t)
         )
-
         ax = plt.subplot2grid((n_rows, N_half), (n // N_half, n % N_half))
         ax.set_title(str(n + 1))
 
