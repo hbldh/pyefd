@@ -60,10 +60,11 @@ def elliptic_fourier_descriptors(
     orders = np.arange(1, order + 1)
     consts = T / (2 * orders * orders * np.pi * np.pi)
     phi = phi * orders.reshape((order, -1))
+
     d_cos_phi = np.cos(phi[:, 1:]) - np.cos(phi[:, :-1])
     d_sin_phi = np.sin(phi[:, 1:]) - np.sin(phi[:, :-1])
-    cos_phi = (dxy[:, 0] / dt) * d_cos_phi
-    a = consts * np.sum(cos_phi, axis=1)
+
+    a = consts * np.sum((dxy[:, 0] / dt) * d_cos_phi, axis=1)
     b = consts * np.sum((dxy[:, 0] / dt) * d_sin_phi, axis=1)
     c = consts * np.sum((dxy[:, 1] / dt) * d_cos_phi, axis=1)
     d = consts * np.sum((dxy[:, 1] / dt) * d_sin_phi, axis=1)
@@ -247,10 +248,23 @@ def plot_efd(coeffs, locus=(0.0, 0.0), image=None, contour=None, n=300):
         )
         ax = plt.subplot2grid((n_rows, N_half), (n // N_half, n % N_half))
         ax.set_title(str(n + 1))
-        if contour is not None:
-            ax.plot(contour[:, 1], contour[:, 0], "c--", linewidth=2)
-        ax.plot(yt, xt, "r", linewidth=2)
+
         if image is not None:
+            # A background image of shape [rows, cols] gets transposed
+            # by imshow so that the first dimension is vertical
+            # and the second dimension is horizontal.
+            # This implies swapping the x and y axes when plotting a curve.
+            if contour is not None:
+                ax.plot(contour[:, 1], contour[:, 0], "c--", linewidth=2)
+            ax.plot(yt, xt, "r", linewidth=2)
             ax.imshow(image, plt.cm.gray)
+        else:
+            # Without a background image, no transpose is implied.
+            # This case is useful when (x,y) point clouds
+            # without relation to an image are to be handled.
+            if contour is not None:
+                ax.plot(contour[:, 0], contour[:, 1], "c--", linewidth=2)
+            ax.plot(xt, yt, "r", linewidth=2)
+            ax.axis("equal")
 
     plt.show()
