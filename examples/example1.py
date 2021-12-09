@@ -44,7 +44,7 @@ zSin = np.array([0.0, 1.339, 0.296, -0.0176])
 
 # ellipse
 # rCos = np.array([3.0, 1.0])
-# zSin = n.array([0.0, 3.0])
+# zSin = np.array([0.0, 3.0])
 
 # evaluate curve geometry given as Fourier coefficients above
 n = 300
