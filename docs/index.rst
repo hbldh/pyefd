@@ -6,8 +6,6 @@
 PyEFD
 =====
 
-[![Build and Test]()](https://github.com/hbldh/pyefd/actions?query=workflow%3A%22Build+and+Test%22)
-
 .. image:: https://github.com/hbldh/pyefd/workflows/Build%20and%20Test/badge.svg
     :target: https://github.com/hbldh/pyefd/actions?query=workflow%3A%22Build+and+Test%22
 .. image:: http://img.shields.io/pypi/v/pyefd.svg
