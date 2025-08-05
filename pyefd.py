@@ -50,7 +50,7 @@ def elliptic_fourier_descriptors(
     :rtype: ::py:class:`numpy.ndarray` or (:py:class:`numpy.ndarray`, (float, float, float))
 
     """
-    dxy = np.diff(contour, axis=0)
+    dxy = np.concatenate([np.diff(contour, axis=0), [contour[0] - contour[-1]]])
     dt = np.sqrt((dxy ** 2).sum(axis=1))
     t = np.concatenate([([0.0]), np.cumsum(dt)])
     T = t[-1]
@@ -164,7 +164,7 @@ def calculate_dc_coefficients(contour):
     :rtype: tuple
 
     """
-    dxy = np.diff(contour, axis=0)
+    dxy =np.concatenate([np.diff(contour, axis=0), [contour[0] - contour[-1]]])
     dt = np.sqrt((dxy ** 2).sum(axis=1))
     t = np.concatenate([([0.0]), np.cumsum(dt)])
     T = t[-1]
