@@ -131,6 +131,9 @@ def normalize_efd(coeffs, size_invariant=True, return_transformation=False):
     # Make the coefficients rotation invariant by rotating so that
     # the semi-major axis is parallel to the x-axis.
     psi_1 = np.arctan2(coeffs[0, 2], coeffs[0, 0])
+    if psi_1 < 0: 
+        psi_1 += np.pi # ensure the starting point is the first quadrant
+
     psi_rotation_matrix = np.array(
         [[np.cos(psi_1), np.sin(psi_1)], [-np.sin(psi_1), np.cos(psi_1)]]
     )
