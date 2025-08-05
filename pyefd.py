@@ -148,6 +148,11 @@ def normalize_efd(coeffs, size_invariant=True, return_transformation=False):
             )
         ).flatten()
 
+    # Ensure a counter-clockwise orientation for the contour
+    if (coeffs[0, 0] * coeffs[0, 3] - coeffs[0, 1] * coeffs[0, 2]) < 0:
+        coeffs[:, 1] *= -1
+        coeffs[:, 3] *= -1
+
     size = coeffs[0, 0]
     if size_invariant:
         # Obtain size-invariance by normalizing.
