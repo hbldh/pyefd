@@ -139,15 +139,7 @@ def normalize_efd(coeffs, size_invariant=True, return_transformation=False):
         [[np.cos(psi_1), np.sin(psi_1)], [-np.sin(psi_1), np.cos(psi_1)]]
     )
     # Rotate all coefficients by -psi_1.
-    for n in _range(1, coeffs.shape[0] + 1):
-        coeffs[n - 1, :] = psi_rotation_matrix.dot(
-            np.array(
-                [
-                    [coeffs[n - 1, 0], coeffs[n - 1, 1]],
-                    [coeffs[n - 1, 2], coeffs[n - 1, 3]],
-                ]
-            )
-        ).flatten()
+    coeffs = np.matmul(psi_rotation_matrix, coeffs.reshape(-1, 2, 2)).reshape(-1, 4)
 
     size = coeffs[0, 0]
     if size_invariant:
