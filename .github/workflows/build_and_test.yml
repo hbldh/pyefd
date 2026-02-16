@@ -2,7 +2,7 @@ name: Build and Test
 
 on:
     push:
-        branches: [ master, develop ]
+        branches: [ master, develop, faster_normalise ]
     pull_request:
         branches: [ master, develop ]
 
@@ -13,7 +13,7 @@ jobs:
         strategy:
             matrix:
                 os: [ubuntu-latest]
-                python-version: [3.7, 3.8, 3.9, '3.10', '3.11']
+                python-version: [3.8, 3.9, '3.10', '3.11']
         steps:
             -   uses: actions/checkout@v2
             -   name: Set up Python ${{ matrix.python-version }}
@@ -37,7 +37,7 @@ jobs:
                 run: |
                     pytest tests.py --junitxml=junit/test-results-${{ matrix.os }}-${{ matrix.python-version }}.xml --cov=com --cov-report=xml --cov-report=html
             -   name: Upload pytest test results
-                uses: actions/upload-artifact@v1
+                uses: actions/upload-artifact@v6
                 with:
                     name: pytest-results-${{ matrix.os }}-${{ matrix.python-version }}
                     path: junit/test-results-${{ matrix.os }}-${{ matrix.python-version }}.xml
