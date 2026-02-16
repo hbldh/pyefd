@@ -50,7 +50,7 @@ def elliptic_fourier_descriptors(
     :rtype: ::py:class:`numpy.ndarray` or (:py:class:`numpy.ndarray`, (float, float, float))
 
     """
-    dxy = np.diff(contour, axis=0)
+    dxy = np.concatenate([np.diff(contour, axis=0), [contour[0] - contour[-1]]])
     dt = np.sqrt((dxy ** 2).sum(axis=1))
     t = np.concatenate([([0.0]), np.cumsum(dt)])
     T = t[-1]
@@ -131,6 +131,9 @@ def normalize_efd(coeffs, size_invariant=True, return_transformation=False):
     # Make the coefficients rotation invariant by rotating so that
     # the semi-major axis is parallel to the x-axis.
     psi_1 = np.arctan2(coeffs[0, 2], coeffs[0, 0])
+    if psi_1 < 0: 
+        psi_1 += np.pi # ensure the starting point is the first quadrant
+
     psi_rotation_matrix = np.array(
         [[np.cos(psi_1), np.sin(psi_1)], [-np.sin(psi_1), np.cos(psi_1)]]
     )
@@ -144,6 +147,11 @@ def normalize_efd(coeffs, size_invariant=True, return_transformation=False):
                 ]
             )
         ).flatten()
+
+    # Ensure a counter-clockwise orientation for the contour
+    if (coeffs[0, 0] * coeffs[0, 3] - coeffs[0, 1] * coeffs[0, 2]) < 0:
+        coeffs[:, 1] *= -1
+        coeffs[:, 3] *= -1
 
     size = coeffs[0, 0]
     if size_invariant:
@@ -164,7 +172,7 @@ def calculate_dc_coefficients(contour):
     :rtype: tuple
 
     """
-    dxy = np.diff(contour, axis=0)
+    dxy =np.concatenate([np.diff(contour, axis=0), [contour[0] - contour[-1]]])
     dt = np.sqrt((dxy ** 2).sum(axis=1))
     t = np.concatenate([([0.0]), np.cumsum(dt)])
     T = t[-1]
