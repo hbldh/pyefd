@@ -4,6 +4,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.0] (2026-02-25)
+
+### Added
+
+- Bumped package version to 1.7.0 in `setup.py`.
+
+### Changed
+
+- Faster normalisation by vectorising the python loops (#22)
+    * faster vectorised rotation
+    * vectorise the global rotation too
+- Fix for tests in Github Actions (#21)
+- Unique normalization and small fix (#20)
+    * Added a unique normalization method that is invariant to size, rotation and starting point.
+    * Added a small fix to the existing normalization method that was not fully invariant to rotation.
+- Additional test changes to handle the new normalization method.
+
+## [1.6.0-2] (2023-08-23)
+
+### Changed
+
+- Packaging and metadata fixes.
+
 ## [1.6.0] (2021-12-09)
 
 ### Added
@@ -109,7 +132,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release
 
-[Unreleased]: https://github.com/hbldh/pyefd/compare/v1.6.0...HEAD
+[Unreleased]: https://github.com/hbldh/pyefd/compare/1.7.0...HEAD
+[1.7.0]: https://github.com/hbldh/pyefd/compare/v1.6.0-2...1.7.0
+[1.6.0-2]: https://github.com/hbldh/pyefd/compare/v1.6.0...v1.6.0-2
 [1.6.0]: https://github.com/hbldh/pyefd/compare/v1.5.1...v1.6.0
 [1.5.1]: https://github.com/hbldh/pyefd/compare/v1.4.1...v1.5.1
 [1.4.1]: https://github.com/hbldh/pyefd/compare/v1.4.0...v1.4.1
