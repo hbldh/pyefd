@@ -34,6 +34,28 @@ except NameError:
     _range = range
 
 
+def _prepare_contour(contour):
+    """Return sanitized contour data and segment deltas."""
+    contour = np.asarray(contour, dtype=float)
+    if contour.ndim != 2 or contour.shape[1] != 2:
+        raise ValueError("Contour array must be of shape [M x 2].")
+
+    dxy = np.concatenate([np.diff(contour, axis=0), [contour[0] - contour[-1]]])
+    dt = np.sqrt((dxy ** 2).sum(axis=1))
+    # Remove zero-length segments to avoid division by zero later on.
+    non_zero = dt > np.finfo(dt.dtype).eps
+
+    if not np.any(non_zero):
+        raise ValueError("Contour must contain at least one non-zero-length segment.")
+
+    dxy = dxy[non_zero]
+    dt = dt[non_zero]
+    t = np.concatenate(([0.0], np.cumsum(dt)))
+    T = t[-1]
+
+    return contour, dxy, dt, t, T
+
+
 def elliptic_fourier_descriptors(
     contour, order=10, normalize=False, return_transformation=False
 ):
@@ -50,10 +72,7 @@ def elliptic_fourier_descriptors(
     :rtype: ::py:class:`numpy.ndarray` or (:py:class:`numpy.ndarray`, (float, float, float))
 
     """
-    dxy = np.concatenate([np.diff(contour, axis=0), [contour[0] - contour[-1]]])
-    dt = np.sqrt((dxy ** 2).sum(axis=1))
-    t = np.concatenate([([0.0]), np.cumsum(dt)])
-    T = t[-1]
+    contour, dxy, dt, t, T = _prepare_contour(contour)
 
     phi = (2 * np.pi * t) / T
 
@@ -172,10 +191,7 @@ def calculate_dc_coefficients(contour):
     :rtype: tuple
 
     """
-    dxy =np.concatenate([np.diff(contour, axis=0), [contour[0] - contour[-1]]])
-    dt = np.sqrt((dxy ** 2).sum(axis=1))
-    t = np.concatenate([([0.0]), np.cumsum(dt)])
-    T = t[-1]
+    contour, dxy, dt, t, T = _prepare_contour(contour)
 
     xi = np.cumsum(dxy[:, 0]) - (dxy[:, 0] / dt) * t[1:]
     A0 = (1 / T) * np.sum(((dxy[:, 0] / (2 * dt)) * np.diff(t ** 2)) + xi * dt)
