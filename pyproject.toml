@@ -1,0 +1,64 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pyefd"
+version = "1.7.0"
+description = 'Python implementation of "Elliptic Fourier Features of a Closed Contour"'
+readme = {file = "README.md", content-type = "text/markdown"}
+license = {text = "MIT"}
+authors = [
+    {name = "Henrik Blidh", email = "henrik.blidh@nedomkull.com"},
+]
+keywords = [
+    "elliptic fourier descriptors",
+    "fourier descriptors",
+    "shape descriptors",
+    "image analysis",
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Operating System :: OS Independent",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Topic :: Software Development",
+    "Topic :: Scientific/Engineering",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+]
+requires-python = ">=3.8"
+dependencies = ["numpy>=1.7.0"]
+
+[project.optional-dependencies]
+test = ["pytest", "scipy"]
+dev = ["pytest", "scipy", "sphinx", "sphinx-rtd-theme", "flake8", "pytest-cov"]
+
+[project.urls]
+Homepage = "https://github.com/hbldh/pyefd"
+Repository = "https://github.com/hbldh/pyefd"
+
+[tool.setuptools]
+py-modules = ["pyefd"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests.py"]
+
+[tool.coverage.run]
+branch = true
+source = ["pyefd"]
+include = ["*/pyefd/*"]
+omit = ["*/setup.py"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "def plot_efd",
+    "except NameError",
+]
