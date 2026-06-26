@@ -24,7 +24,7 @@ jobs:
                 run: python -m pip install --upgrade pip setuptools wheel
 
             -   name: Install test dependencies and package
-                run: pip install --group=test -e .
+                run: pip install -e ".[test]"
             -   name: Install lint dependencies
                 run: pip install flake8
             -   name: Lint with flake8
