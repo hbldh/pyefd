@@ -13,7 +13,7 @@ jobs:
         strategy:
             matrix:
                 os: [ubuntu-latest]
-                python-version: [3.8, 3.9, '3.10', '3.11']
+                python-version: ['3.10', '3.11', '3.12', '3.13']
         steps:
             -   uses: actions/checkout@v2
             -   name: Set up Python ${{ matrix.python-version }}
@@ -24,7 +24,7 @@ jobs:
                 run: python -m pip install --upgrade pip setuptools wheel
 
             -   name: Install test dependencies and package
-                run: pip install --group=test -e .
+                run: pip install -e ".[test]"
             -   name: Install lint dependencies
                 run: pip install flake8
             -   name: Lint with flake8
