@@ -37,7 +37,7 @@ requires-python = ">=3.10"
 dependencies = ["numpy>=1.7.0"]
 
 [dependency-groups]
-test = ["pytest", "scipy"]
+test = ["pytest", "scipy", "pytest-cov"]
 dev = ["pytest", "scipy", "sphinx", "sphinx-rtd-theme", "flake8", "pytest-cov"]
 
 [project.urls]
